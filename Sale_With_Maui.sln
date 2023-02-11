@@ -3,7 +3,39 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sale_With_Maui.Shared", "Sale_With_Maui.Shared\Sale_With_Maui.Shared.csproj", "{EC098855-7886-4122-BC06-93AD9D3CCD62}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sale_With_Maui.API", "Sale_With_Maui.API\Sale_With_Maui.API.csproj", "{35119B79-9A7E-4CBC-BABC-E0E88C2BC0FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sale_With_Maui.WEB", "Sale_With_Maui.WEB\Sale_With_Maui.WEB.csproj", "{6E194638-DC94-488B-A6F7-B7254370CBC7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sale_With_Maui.Mobile", "Sale_With_Maui.Mobile\Sale_With_Maui.Mobile.csproj", "{53C110C1-86FF-47EA-A13F-0F931B01213B}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EC098855-7886-4122-BC06-93AD9D3CCD62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC098855-7886-4122-BC06-93AD9D3CCD62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC098855-7886-4122-BC06-93AD9D3CCD62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC098855-7886-4122-BC06-93AD9D3CCD62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35119B79-9A7E-4CBC-BABC-E0E88C2BC0FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35119B79-9A7E-4CBC-BABC-E0E88C2BC0FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35119B79-9A7E-4CBC-BABC-E0E88C2BC0FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35119B79-9A7E-4CBC-BABC-E0E88C2BC0FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E194638-DC94-488B-A6F7-B7254370CBC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E194638-DC94-488B-A6F7-B7254370CBC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E194638-DC94-488B-A6F7-B7254370CBC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E194638-DC94-488B-A6F7-B7254370CBC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53C110C1-86FF-47EA-A13F-0F931B01213B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53C110C1-86FF-47EA-A13F-0F931B01213B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53C110C1-86FF-47EA-A13F-0F931B01213B}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{53C110C1-86FF-47EA-A13F-0F931B01213B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53C110C1-86FF-47EA-A13F-0F931B01213B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53C110C1-86FF-47EA-A13F-0F931B01213B}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
