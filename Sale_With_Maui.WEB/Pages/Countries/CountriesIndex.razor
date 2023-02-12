@@ -40,7 +40,7 @@
     protected async override Task OnInitializedAsync()
     {
         var responseHppt = await repository.Get<List<Country>>("api/countries");
-        Countries = responseHppt.Response!;
+        Countries = responseHppt.Response;
     }
 
 }

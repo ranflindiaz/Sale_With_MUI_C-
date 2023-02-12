@@ -9,7 +9,7 @@ namespace Sale_With_Maui.WEB.Repositories
     {
         private readonly HttpClient _httpClient;
 
-        private JsonSerializerOptions _jsonDefaulOptions => new JsonSerializerOptions 
+        private JsonSerializerOptions _jsonDefaultOptions => new JsonSerializerOptions 
         { 
             PropertyNameCaseInsensitive = true,
         };
@@ -24,7 +24,7 @@ namespace Sale_With_Maui.WEB.Repositories
             var responseHttp = await _httpClient.GetAsync(url);
             if (responseHttp.IsSuccessStatusCode)
             {
-                var response = await UnserializeAnswer<T>(responseHttp, _jsonDefaulOptions);
+                var response = await UnserializeAnswer<T>(responseHttp, _jsonDefaultOptions);
                 return new HttpResponseWrapper<T>(response,false, responseHttp);
             }
 
@@ -46,7 +46,7 @@ namespace Sale_With_Maui.WEB.Repositories
             var responseHttp = await _httpClient.PostAsync(url, messageContent);
             if(responseHttp.IsSuccessStatusCode)
             {
-                var response = await UnserializeAnswer<TResponse>(responseHttp, _jsonDefaulOptions);
+                var response = await UnserializeAnswer<TResponse>(responseHttp, _jsonDefaultOptions);
                 return new HttpResponseWrapper<TResponse>(response,false, responseHttp);
             }
 
@@ -72,7 +72,6 @@ namespace Sale_With_Maui.WEB.Repositories
             var messageContent = new StringContent(messageJSON, Encoding.UTF8, "application/json");
             var responseHttp = await _httpClient.PutAsync(url, messageContent);
             return new HttpResponseWrapper<object>(null, !responseHttp.IsSuccessStatusCode, responseHttp);
-            new NotImplementedException();
         }
     }
 }
