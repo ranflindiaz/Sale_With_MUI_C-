@@ -50,7 +50,7 @@ namespace Sale_With_Maui.API.Controllers
             return Ok(country);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delelte(int id)
         {
             var afectedRows = await _dataContext.Countries
