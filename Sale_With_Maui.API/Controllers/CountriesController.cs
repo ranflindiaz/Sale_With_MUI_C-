@@ -26,8 +26,27 @@ namespace Sale_With_Maui.API.Controllers
         public async Task<IActionResult> Post(Country country)
         {
             _dataContext.Countries.Add(country);
-            await _dataContext.SaveChangesAsync();
-            return Ok(country);
+            try
+            {
+                await _dataContext.SaveChangesAsync();
+                return Ok(country);
+            }
+            catch (DbUpdateException dbUpdateException)
+            {
+                if (dbUpdateException.InnerException!.Message.Contains("duplicate"))
+                {
+                    return BadRequest("Ya existe un país con el mismo nombre.");
+                }
+                else
+                {
+                    return BadRequest(dbUpdateException.InnerException.Message);
+                } 
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
         }
 
         [HttpGet("{id:int}")]
@@ -46,8 +65,26 @@ namespace Sale_With_Maui.API.Controllers
         public async Task<IActionResult> Put(Country country)
         {
             _dataContext.Update(country);
-            await _dataContext.SaveChangesAsync();
-            return Ok(country);
+            try
+            {
+                await _dataContext.SaveChangesAsync();
+                return Ok(country);
+            }
+            catch (DbUpdateException dbUpdateException)
+            {
+                if (dbUpdateException.InnerException!.Message.Contains("duplicate"))
+                {
+                    return BadRequest("Ya existe un registro con el mismo nombre.");
+                }
+                else
+                {
+                    return BadRequest(dbUpdateException.InnerException.Message);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{id:int}")]
