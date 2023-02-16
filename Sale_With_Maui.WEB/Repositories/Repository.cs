@@ -1,6 +1,5 @@
-﻿using Microsoft.VisualBasic;
+﻿using Sale_With_Maui.WEB.Interfaces;
 using System.Text;
-using Sale_With_Maui.WEB.Interfaces;
 using System.Text.Json;
 
 namespace Sale_With_Maui.WEB.Repositories
@@ -9,8 +8,8 @@ namespace Sale_With_Maui.WEB.Repositories
     {
         private readonly HttpClient _httpClient;
 
-        private JsonSerializerOptions _jsonDefaultOptions => new JsonSerializerOptions 
-        { 
+        private JsonSerializerOptions _jsonDefaultOptions => new JsonSerializerOptions
+        {
             PropertyNameCaseInsensitive = true,
         };
 
@@ -25,7 +24,7 @@ namespace Sale_With_Maui.WEB.Repositories
             if (responseHttp.IsSuccessStatusCode)
             {
                 var response = await UnserializeAnswer<T>(responseHttp, _jsonDefaultOptions);
-                return new HttpResponseWrapper<T>(response,false, responseHttp);
+                return new HttpResponseWrapper<T>(response, false, responseHttp);
             }
 
             return new HttpResponseWrapper<T>(default, true, responseHttp);
@@ -44,10 +43,10 @@ namespace Sale_With_Maui.WEB.Repositories
             var messageJson = JsonSerializer.Serialize(model);
             var messageContent = new StringContent(messageJson, Encoding.UTF8, "application/json");
             var responseHttp = await _httpClient.PostAsync(url, messageContent);
-            if(responseHttp.IsSuccessStatusCode)
+            if (responseHttp.IsSuccessStatusCode)
             {
                 var response = await UnserializeAnswer<TResponse>(responseHttp, _jsonDefaultOptions);
-                return new HttpResponseWrapper<TResponse>(response,false, responseHttp);
+                return new HttpResponseWrapper<TResponse>(response, false, responseHttp);
             }
 
             return new HttpResponseWrapper<TResponse>(default, !responseHttp.IsSuccessStatusCode, responseHttp);

@@ -12,8 +12,8 @@ using Sale_With_Maui.API.Data;
 namespace SaleWithMaui.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230214011640_AddStatesAndCities")]
-    partial class AddStatesAndCities
+    [Migration("20230216005504_CreateCountryStateCity")]
+    partial class CreateCountryStateCity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -81,7 +81,7 @@ namespace SaleWithMaui.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CountryId")
+                    b.Property<int>("CountryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -94,8 +94,7 @@ namespace SaleWithMaui.API.Migrations
                     b.HasIndex("CountryId");
 
                     b.HasIndex("Name", "CountryId")
-                        .IsUnique()
-                        .HasFilter("[CountryId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("States");
                 });
@@ -113,7 +112,9 @@ namespace SaleWithMaui.API.Migrations
                 {
                     b.HasOne("Sale_With_Maui.Shared.Entities.Country", "Country")
                         .WithMany("States")
-                        .HasForeignKey("CountryId");
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Country");
                 });

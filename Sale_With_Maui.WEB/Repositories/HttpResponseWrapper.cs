@@ -21,18 +21,18 @@ namespace Sale_With_Maui.WEB.Repositories
         {
             if (!Error) { return null; }
 
-            var codigoStatus = HttpResponseMessage.StatusCode;
-            if (codigoStatus == HttpStatusCode.NotFound) 
+            var statusCode = HttpResponseMessage.StatusCode;
+            if (statusCode == HttpStatusCode.NotFound) 
             {
                 return "Recurso no encontrado.";
             }
-            else if(codigoStatus == HttpStatusCode.BadRequest)
+            else if(statusCode == HttpStatusCode.BadRequest)
             {
                 return await HttpResponseMessage.Content.ReadAsStringAsync();
-            }else if (codigoStatus == HttpStatusCode.Unauthorized)
+            }else if (statusCode == HttpStatusCode.Unauthorized)
             {
                 return "Tienes que logearte para hacer esta operacion.";
-            }else if(codigoStatus == HttpStatusCode.Forbidden)
+            }else if(statusCode == HttpStatusCode.Forbidden)
             {
                 return "No tienes permisos para hacer esta operacion.";
             }

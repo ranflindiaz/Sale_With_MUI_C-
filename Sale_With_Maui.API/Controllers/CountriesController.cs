@@ -19,8 +19,7 @@ namespace Sale_With_Maui.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            return Ok(
-                await _dataContext.Countries
+            return Ok(await _dataContext.Countries
                 .Include(x => x.States)
                 .ToListAsync());
         }
