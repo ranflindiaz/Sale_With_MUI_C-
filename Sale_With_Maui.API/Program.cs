@@ -8,7 +8,7 @@ builder.Services.AddControllers()
     .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer("name=SqlString"));
+builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer("name=VBSqlString"));
 builder.Services.AddTransient<SeedDb>();
 
 var app = builder.Build();
