@@ -48,10 +48,8 @@ namespace Sale_With_Maui.API.Controllers
                 {
                     return BadRequest("Ya existe un país con el mismo nombre.");
                 }
-                else
-                {
-                    return BadRequest(dbUpdateException.InnerException.Message);
-                } 
+
+                return BadRequest(dbUpdateException.InnerException.Message);
             }
             catch(Exception ex)
             {
@@ -85,12 +83,10 @@ namespace Sale_With_Maui.API.Controllers
             {
                 if (dbUpdateException.InnerException!.Message.Contains("duplicate"))
                 {
-                    return BadRequest("Ya existe un registro con el mismo nombre.");
+                    return BadRequest("Ya existe un pais con el mismo nombre.");
                 }
-                else
-                {
-                    return BadRequest(dbUpdateException.InnerException.Message);
-                }
+
+                return BadRequest(dbUpdateException.InnerException.Message);
             }
             catch (Exception ex)
             {
