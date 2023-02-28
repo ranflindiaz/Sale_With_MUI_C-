@@ -6,14 +6,14 @@ namespace Sale_With_Maui.Shared.Entities
     {
         public int Id { get; set; }
 
-        [Display(Name = "Departamento/Estado")]
+        [Display(Name = "Estado/Departamento")]
         [MaxLength(100, ErrorMessage = "El campo {0} debe tener minimo {1} caracteres.")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public string Name { get; set; } = null!;
 
         public int CountryId { get; set; }
 
-        public Country Country { get; set; } = null!;
+        public Country? Country { get; set; }
 
         public ICollection<City>? Cities { get; set; }
 

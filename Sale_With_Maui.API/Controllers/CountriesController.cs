@@ -17,7 +17,7 @@ namespace Sale_With_Maui.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAsync()
         {
             return Ok(await _dataContext.Countries
                 .Include(x => x.States)
@@ -25,7 +25,7 @@ namespace Sale_With_Maui.API.Controllers
         }
 
         [HttpGet("full")]
-        public async Task<IActionResult> GetFull() 
+        public async Task<IActionResult> GetFullAsync()
         {
             return Ok(await _dataContext.Countries
                 .Include(x => x.States!)

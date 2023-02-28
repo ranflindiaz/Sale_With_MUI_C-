@@ -21,8 +21,8 @@ namespace Sale_With_Maui.API.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Country>().HasIndex(x => x.Name).IsUnique();
-            modelBuilder.Entity<State>().HasIndex("Name", "CountryId").IsUnique();
-            modelBuilder.Entity<City>().HasIndex("Name", "StateId").IsUnique();
+            modelBuilder.Entity<State>().HasIndex("CountryId", "Name").IsUnique();
+            modelBuilder.Entity<City>().HasIndex("StateId", "Name").IsUnique();
         }
     }
 }
