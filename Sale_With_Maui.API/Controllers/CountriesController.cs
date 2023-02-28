@@ -9,17 +9,17 @@ namespace Sale_With_Maui.API.Controllers
     [Route("/api/countries")]
     public class CountriesController : ControllerBase
     {
-        private readonly DataContext _dataContext;
+        private readonly DataContext _context;
 
-        public CountriesController(DataContext dataContext)
+        public CountriesController(DataContext context)
         {
-            _dataContext = dataContext;
+            _context = context;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAsync()
         {
-            return Ok(await _dataContext.Countries
+            return Ok(await _context.Countries
                 .Include(x => x.States)
                 .ToListAsync());
         }
@@ -27,19 +27,20 @@ namespace Sale_With_Maui.API.Controllers
         [HttpGet("full")]
         public async Task<IActionResult> GetFullAsync()
         {
-            return Ok(await _dataContext.Countries
+            return Ok(await _context.Countries
                 .Include(x => x.States!)
                 .ThenInclude(x => x.Cities)
                 .ToListAsync());
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(Country country)
+        public async Task<IActionResult> PostAsync(Country country)
         {
-            _dataContext.Countries.Add(country);
+            
             try
             {
-                await _dataContext.SaveChangesAsync();
+                _context.Countries.Add(country);
+                await _context.SaveChangesAsync();
                 return Ok(country);
             }
             catch (DbUpdateException dbUpdateException)
@@ -59,9 +60,11 @@ namespace Sale_With_Maui.API.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> GetAsync(int id)
         {
-            var country = await _dataContext.Countries.FirstOrDefaultAsync(x => x.Id == id);
+            var country = await _context.Countries
+                .Include(s => s.States!)
+                .ThenInclude(c => c.Cities).FirstOrDefaultAsync(x => x.Id == id);
             if (country == null)
             {
                 return NotFound();
@@ -71,12 +74,13 @@ namespace Sale_With_Maui.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Put(Country country)
+        public async Task<IActionResult> PutAsync(Country country)
         {
-            _dataContext.Update(country);
+            
             try
             {
-                await _dataContext.SaveChangesAsync();
+                _context.Update(country);
+                await _context.SaveChangesAsync();
                 return Ok(country);
             }
             catch (DbUpdateException dbUpdateException)
@@ -95,17 +99,17 @@ namespace Sale_With_Maui.API.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        public async Task<IActionResult> Delelte(int id)
+        public async Task<IActionResult> DelelteAsync(int id)
         {
-            var afectedRows = await _dataContext.Countries
-                .Where(x => x.Id == id)
-                .ExecuteDeleteAsync();
+            var country = await _context.Countries.FirstOrDefaultAsync(x => x.Id == id);
 
-            if (afectedRows == 0)
+            if (country == null)
             {
                 return NotFound();
             }
 
+            _context.Remove(country);
+            await _context.SaveChangesAsync();
             return NoContent();
         }
     }

@@ -17,18 +17,16 @@ namespace Sales.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Get()
+        public async Task<ActionResult> GetAsync()
         {
-            return Ok(await _context.Cities
-                .ToListAsync());
+            return Ok(await _context.Cities.ToListAsync());
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult> Get(int id)
+        public async Task<ActionResult> GetAsync(int id)
         {
-            var city = await _context.Cities
-                .FirstOrDefaultAsync(x => x.Id == id);
-            if (city is null)
+            var city = await _context.Cities.FirstOrDefaultAsync(x => x.Id == id);
+            if (city == null)
             {
                 return NotFound();
             }
@@ -37,11 +35,11 @@ namespace Sales.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post(City city)
+        public async Task<ActionResult> PostAsync(City city)
         {
-            _context.Add(city);
             try
             {
+                _context.Add(city);
                 await _context.SaveChangesAsync();
                 return Ok(city);
             }
@@ -63,11 +61,11 @@ namespace Sales.API.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> Put(City city)
+        public async Task<ActionResult> PutAsync(City city)
         {
-            _context.Update(city);
             try
             {
+                _context.Update(city);
                 await _context.SaveChangesAsync();
                 return Ok(city);
             }
@@ -89,17 +87,17 @@ namespace Sales.API.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> DeleteAsync(int id)
         {
-            var afectedRows = await _context.Cities
-                .Where(x => x.Id == id)
-                .ExecuteDeleteAsync();
+            var city = await _context.Cities.FirstOrDefaultAsync(x => x.Id == id);
 
-            if (afectedRows == 0)
+            if (city == null)
             {
                 return NotFound();
             }
 
+            _context.Remove(city);
+            await _context.SaveChangesAsync();
             return NoContent();
         }
     }

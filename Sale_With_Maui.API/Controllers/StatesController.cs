@@ -17,7 +17,7 @@ namespace Sales.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Get()
+        public async Task<ActionResult> GetAsync()
         {
             return Ok(await _context.States
                 .Include(x => x.Cities)
@@ -25,12 +25,10 @@ namespace Sales.API.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult> Get(int id)
+        public async Task<ActionResult> GetAsync(int id)
         {
-            var state = await _context.States
-                .Include(x => x.Cities)
-                .FirstOrDefaultAsync(x => x.Id == id);
-            if (state is null)
+            var state = await _context.States.FirstOrDefaultAsync(x => x.Id == id);
+            if (state == null)
             {
                 return NotFound();
             }
@@ -38,12 +36,30 @@ namespace Sales.API.Controllers
             return Ok(state);
         }
 
-        [HttpPost]
-        public async Task<ActionResult> Post(State state)
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> DeleteAsync(int id)
         {
-            _context.Add(state);
+            var state = await _context.States
+                .Include(c => c.Cities)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (state == null)
+            {
+                return NotFound();
+            }
+
+            _context.Remove(state);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> PostAsync(State state)
+        {
+            
             try
             {
+                _context.Add(state);
                 await _context.SaveChangesAsync();
                 return Ok(state);
             }
@@ -65,7 +81,7 @@ namespace Sales.API.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> Put(State state)
+        public async Task<ActionResult> PutAsync(State state)
         {
             try
             {
@@ -88,21 +104,6 @@ namespace Sales.API.Controllers
             {
                 return BadRequest(exception.Message);
             }
-        }
-
-        [HttpDelete("{id:int}")]
-        public async Task<ActionResult> Delete(int id)
-        {
-            var afectedRows = await _context.States
-                .Where(x => x.Id == id)
-                .ExecuteDeleteAsync();
-
-            if (afectedRows == 0)
-            {
-                return NotFound();
-            }
-
-            return NoContent();
         }
     }
 }
