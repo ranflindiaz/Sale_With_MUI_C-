@@ -33,7 +33,7 @@ else
                 navigationManager.NavigateTo("/countries");
                 return;
             }
-            var messageError = await responseHttp.GetErrorMessage();
+            var messageError = await responseHttp.GetErrorMessageAsync();
             await swal.FireAsync("Error", messageError, SweetAlertIcon.Error);
         }
 
@@ -47,12 +47,12 @@ else
 
         if (responseHTTP.Error)
         {
-            var mensajeError = await responseHTTP.GetErrorMessage();
+            var mensajeError = await responseHTTP.GetErrorMessageAsync();
             await swal.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
             return;
         }
-        countryForm!.FormPostedSuccessfully = true;
-        navigationManager.NavigateTo("/countries");
+
+        Return();
     }
 
     private void Return()

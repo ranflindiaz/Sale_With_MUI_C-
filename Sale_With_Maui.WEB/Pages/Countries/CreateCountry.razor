@@ -17,15 +17,12 @@
 
         if (httpResponse.Error)
         {
-            var mensajeError = await httpResponse.GetErrorMessage();
+            var mensajeError = await httpResponse.GetErrorMessageAsync();
             await swal.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
-        }
-        else
-        {
-            countryForm!.FormPostedSuccessfully = true;
-            navigationManager.NavigateTo("countries");
+            return;
         }
 
+        Return();
     }
 
     private void Return()

@@ -27,7 +27,7 @@
                         <td>
                             <a href="/countries/details/@country.Id" class="btn btn-info">Detalles</a>
                             <a href="/countries/edit/@country.Id" class="btn btn-warning">Editar</a>
-                            <button class="btn btn-danger" @onclick=@(() => Delete(country))>Borrar</button>
+                            <button class="btn btn-danger" @onclick=@(() => DeleteAsync(country.Id))>Borrar</button>
                         </td>
                         <td>
                             @country.Name
@@ -47,16 +47,16 @@
 
     protected async override Task OnInitializedAsync()
     {
-        await Load();
+        await LoadSync();
     }
 
-    protected async Task Load()
+    protected async Task LoadSync()
     {
         var responseHppt = await repository.Get<List<Country>>("api/countries");
         Countries = responseHppt.Response;
     }
 
-    private async Task Delete(Country country)
+    private async Task DeleteAsync(int id)
     {
         var result = await swal.FireAsync(new SweetAlertOptions
             {
@@ -73,24 +73,19 @@
             return;
         }
 
-        var responseHTTP = await repository.Delete($"api/countries/{country.Id}");
+        var responseHTTP = await repository.Delete($"api/countries/{id}");
 
         if (responseHTTP.Error)
         {
-            
-            if (responseHTTP.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+
+            if (responseHTTP.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
             {
-                navigationManager.NavigateTo("/");
-            }
-            else
-            {
-                var mensajeError = await responseHTTP.GetErrorMessage();
-                await swal.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+                var messageError = await responseHTTP.GetErrorMessageAsync();
+                await swal.FireAsync("Error", messageError, SweetAlertIcon.Error);
+                return;
             }
         }
-        else
-        {
-            await Load();
-        }
+
+        await LoadSync();
     }
 }

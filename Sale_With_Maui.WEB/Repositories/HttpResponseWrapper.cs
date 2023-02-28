@@ -17,7 +17,7 @@ namespace Sale_With_Maui.WEB.Repositories
 
         public HttpResponseMessage HttpResponseMessage { get;set; }
 
-        public async Task<string?> GetErrorMessage()
+        public async Task<string?> GetErrorMessageAsync()
         {
             if (!Error) { return null; }
 
