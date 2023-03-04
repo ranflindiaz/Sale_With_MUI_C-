@@ -1,4 +1,4 @@
-﻿@page "/states/details/{Id:int}"
+﻿@page "/states/details/{StateId:int}"
 @inject IRepository repository
 @inject NavigationManager navigationManager
 @inject SweetAlertService swal
@@ -11,63 +11,78 @@ else
 {
     <h3>@state.Name</h3>
     <div class="mb-3">
-        <a class="btn btn-primary" href="/cities/create/@state.Id">Nueva Ciudad</a>
-        <a class="btn btn-success" href="/states/detailes/@Id">Regresar</a>
+        <a class="btn btn-primary" href="/cities/create/@StateId">Nueva Ciudad</a>
+        <a class="btn btn-success" href="/countries/details/@state.CountryId">Regresar</a>
     </div>
 
-    <GenericList MyList="cities">
-        <RecordsComplete>
+    <GenericList MyList="state.Cities!.ToList()">
+        <Body>
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th></th>
                         <th>Ciudades</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var city in state.Cities!)
+                    @foreach (var city in state.Cities!.ToList())
                     {
                         <tr>
                             <td>
-                                <a href="/cities/edit/@Id/@city.Id" class="btn btn-warning">Editar</a>
-                                <button class="btn btn-danger" @onclick=@(() => Delete(city))>Borrar</button>
+                                @city.Name
                             </td>
-                            <td>@city.Name</td>
+                            <td>
+                                <a href="/cities/edit/@city.Id" class="btn btn-warning">Editar</a>
+                                <button class="btn btn-danger" @onclick=@(() => DeleteAsync(city.Id))>Borrar</button>
+                            </td>
                         </tr>
                     }
                 </tbody>
             </table>
-        </RecordsComplete>
+         </Body>
     </GenericList>
 }
 
 @code {
     private State? state;
-    private List<City>? cities;
 
     [Parameter]
-    public int Id { get; set; }
+    public int StateId { get; set; }
 
     protected async override Task OnInitializedAsync()
     {
-        await Load();
+        await LoadAsync();
     }
 
-    private async Task Load()
+    private async Task LoadAsync()
     {
-        var responseHppt = await repository.Get<State>($"api/states/{Id}");
-        state = responseHppt.Response!;
-        cities = state.Cities!.ToList();
+        var responseHppt = await repository.Get<State>($"/api/states/{StateId}");
+        if (responseHppt.Error)
+        {
+            if (responseHppt.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
+            {
+                navigationManager.NavigateTo("/countries");
+                return;
+            }
+
+            var message = await responseHppt.GetErrorMessageAsync();
+            await swal.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+
+        state = responseHppt.Response;
     }
 
-    private async Task Delete(City city)
+    private async Task DeleteAsync(int cityId)
     {
         var result = await swal.FireAsync(new SweetAlertOptions
             {
                 Title = "Confirmación",
                 Text = "¿Esta seguro que quieres borrar el registro?",
                 Icon = SweetAlertIcon.Question,
-                ShowCancelButton = true
+                ShowCancelButton = true,
+                CancelButtonText = "No",
+                ConfirmButtonText = "Si"
             });
 
         var confirm = string.IsNullOrEmpty(result.Value);
@@ -77,23 +92,18 @@ else
             return;
         }
 
-        var responseHTTP = await repository.Delete($"api/cities/{city.Id}");
+        var responseHTTP = await repository.Delete($"/api/cities/{cityId}");
 
         if (responseHTTP.Error)
         {
-            if (responseHTTP.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
-            {
-                navigationManager.NavigateTo("/");
-            }
-            else
+            if (responseHTTP.HttpResponseMessage.StatusCode != HttpStatusCode.NotFound)
             {
                 var mensajeError = await responseHTTP.GetErrorMessageAsync();
                 await swal.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+                return;
             }
         }
-        else
-        {
-            await Load();
-        }
+
+        await LoadAsync();
     }
 }

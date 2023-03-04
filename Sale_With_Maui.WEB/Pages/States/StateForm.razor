@@ -19,11 +19,6 @@
 @code {
     private EditContext editContext = null!;
 
-    protected override void OnInitialized()
-    {
-        editContext = new(State);
-    }
-
     [EditorRequired]
     [Parameter]
     public State State { get; set; } = null!;
@@ -38,16 +33,16 @@
 
     public bool FormPostedSuccessfully { get; set; } = false;
 
+    protected override void OnInitialized()
+    {
+        editContext = new(State);
+    }
+
     private async Task OnBeforeInternalNavigation(LocationChangingContext context)
     {
         var formWasEdited = editContext.IsModified();
 
-        if (!formWasEdited)
-        {
-            return;
-        }
-
-        if (FormPostedSuccessfully)
+        if (!formWasEdited || FormPostedSuccessfully)
         {
             return;
         }
@@ -57,7 +52,9 @@
                 Title = "Confirmación",
                 Text = "¿Deseas abandonar la página y perder los cambios?",
                 Icon = SweetAlertIcon.Warning,
-                ShowCancelButton = true
+                ShowCancelButton = true,
+                CancelButtonText = "No",
+                ConfirmButtonText = "si"
             });
 
         var confirm = !string.IsNullOrEmpty(result.Value);

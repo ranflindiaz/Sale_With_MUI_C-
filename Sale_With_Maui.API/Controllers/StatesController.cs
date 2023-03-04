@@ -27,7 +27,8 @@ namespace Sales.API.Controllers
         [HttpGet("{id:int}")]
         public async Task<ActionResult> GetAsync(int id)
         {
-            var state = await _context.States.FirstOrDefaultAsync(x => x.Id == id);
+            var state = await _context.States
+                .Include(c => c.Cities).FirstOrDefaultAsync(x => x.Id == id);
             if (state == null)
             {
                 return NotFound();

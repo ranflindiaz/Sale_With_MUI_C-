@@ -15,8 +15,8 @@ else
         <a class="btn btn-success" href="/countries">Regresar</a>
     </div>
 
-    <GenericList MyList="states">
-        <RecordsComplete>
+    <GenericList MyList="country.States!.ToList()">
+        <Body>
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -27,7 +27,7 @@ else
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var state in states!)
+                    @foreach (var state in country.States!.ToList())
                     {
                         <tr>
                             <td>@state.Name</td>
@@ -41,14 +41,13 @@ else
                     }
                 </tbody>
             </table>
-        </RecordsComplete>
+        </Body>
     </GenericList>
 }
 
 
 @code {
     private Country? country;
-    private List<State>? states;
 
     [Parameter]
     public int Id { get; set; }
@@ -73,7 +72,6 @@ else
             await swal.FireAsync("Error", message, SweetAlertIcon.Error);
         }
         country = responseHppt.Response;
-        states = country!.States!.ToList();
     }
 
     private async Task DeleteAsync(int id)
@@ -83,7 +81,9 @@ else
                 Title = "Confirmación",
                 Text = "¿Esta seguro que quieres borrar el registro?",
                 Icon = SweetAlertIcon.Question,
-                ShowCancelButton = true
+                ShowCancelButton = true,
+                CancelButtonText = "No",
+                ConfirmButtonText = "Si"
             });
 
         var confirm = string.IsNullOrEmpty(result.Value);
@@ -97,9 +97,9 @@ else
 
         if (responseHTTP.Error)
         {
-            if (responseHTTP.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            if (responseHTTP.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
             {
-                navigationManager.NavigateTo("/");
+                navigationManager.NavigateTo("/countries");
             }
             else
             {

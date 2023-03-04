@@ -34,7 +34,7 @@ else
     }
     else
     {
-        @RecordsComplete
+        @Body
     }
 }
 
@@ -49,7 +49,7 @@ else
     public RenderFragment<Titem> Records { get; set; } = null!;
 
     [Parameter]
-    public RenderFragment RecordsComplete { get; set; } = null!;
+    public RenderFragment Body { get; set; } = null!;
 
     [Parameter]
     [EditorRequired]

@@ -1,4 +1,4 @@
-﻿@page "/cities/edit/{StateId:int}/{CityId:int}"
+﻿@page "/cities/edit/{CityId:int}"
 @inject NavigationManager navigationManager
 @inject IRepository repository
 @inject SweetAlertService swal
@@ -20,9 +20,6 @@ else
     private CityForm? cityForm;
 
     [Parameter]
-    public int StateId { get; set; }
-
-    [Parameter]
     public int CityId { get; set; }
 
     protected override async Task OnInitializedAsync()
@@ -31,9 +28,9 @@ else
 
         if (responseHTTP.Error)
         {
-            if (responseHTTP.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            if (responseHTTP.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
             {
-                navigationManager.NavigateTo("countries");
+                navigationManager.NavigateTo($"/states/details/{city!.StateId}");
             }
             else
             {
@@ -55,16 +52,15 @@ else
         {
             var mensajeError = await responseHTTP.GetErrorMessageAsync();
             await swal.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+            return;
         }
-        else
-        {
-            cityForm!.FormPostedSuccessfully = true;
-            navigationManager.NavigateTo($"/states/details/{StateId}");
-        }
+
+        Return();
     }
 
     private void Return()
     {
-        navigationManager.NavigateTo($"/states/details/{StateId}");
+        cityForm!.FormPostedSuccessfully = true;
+        navigationManager.NavigateTo($"/states/details/{city!.StateId}");
     }
 }
