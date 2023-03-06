@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sale_With_Maui.API.Data;
+using Sale_With_Maui.API.Helpers;
+using Sale_With_Maui.Shared.DTOs;
 using Sale_With_Maui.Shared.Entities;
 
 namespace Sale_With_Maui.API.Controllers
@@ -17,11 +19,24 @@ namespace Sale_With_Maui.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAsync()
+        public async Task<IActionResult> GetAsync([FromQuery] PaginationDto pagination)
         {
-            return Ok(await _context.Countries
-                .Include(x => x.States)
+            var queryable = _context.Countries
+                .Include(x => x.States).AsQueryable();
+
+            return Ok(await queryable
+                .OrderBy(n => n.Name)
+                .Paginate(pagination)
                 .ToListAsync());
+        }
+
+        [HttpGet("totalPages")]
+        public async Task<ActionResult> GetPages([FromQuery] PaginationDto pagination)
+        {
+            var queryable = _context.Countries.AsQueryable();
+            double count = await queryable.CountAsync();
+            double totalPages = Math.Ceiling(count / pagination.RecordsNumber);
+            return Ok(totalPages);
         }
 
         [HttpGet("full")]
