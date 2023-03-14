@@ -1,9 +1,12 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Sale_With_Maui.API.Data;
 using Sale_With_Maui.API.Helpers;
 using Sale_With_Maui.API.Services;
 using Sale_With_Maui.Shared.Entities;
+using System.Text;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,16 +30,28 @@ builder.Services.AddIdentity<User, IdentityRole>(x =>
 })
     .AddEntityFrameworkStores<DataContext>()
     .AddDefaultTokenProviders();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(x => x.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["jwtKey"]!)),
+        ClockSkew = TimeSpan.Zero
+    });
+
 var app = builder.Build();
 SeedData(app);
 
 void SeedData(WebApplication app)
 {
-    IServiceScopeFactory? scopeFactory = app.Services.GetService<IServiceScopeFactory>();
+    IServiceScopeFactory scopeFactory = app.Services.GetService<IServiceScopeFactory>();
 
-    using (IServiceScope? scope = scopeFactory!.CreateScope())
+    using (IServiceScope scope = scopeFactory!.CreateScope())
     {
-        SeedDb? service = scope.ServiceProvider.GetService<SeedDb>();
+        SeedDb service = scope.ServiceProvider.GetService<SeedDb>();
         service!.SeedAsync().Wait();
     }
 }
