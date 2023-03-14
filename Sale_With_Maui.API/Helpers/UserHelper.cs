@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Sale_With_Maui.API.Data;
+using Sale_With_Maui.Shared.DTOs;
 using Sale_With_Maui.Shared.Entities;
 
 namespace Sale_With_Maui.API.Helpers
@@ -11,12 +12,14 @@ namespace Sale_With_Maui.API.Helpers
         private readonly DataContext _context;
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _rolManager;
+        private readonly SignInManager<User> _signInManager;
 
-        public UserHelper(DataContext context, UserManager<User> userManager, RoleManager<IdentityRole> rolManager)
+        public UserHelper(DataContext context, UserManager<User> userManager, RoleManager<IdentityRole> rolManager, SignInManager<User> signInManager)
         {
             _context = context;
             _userManager = userManager;
             _rolManager = rolManager;
+            _signInManager = signInManager;
         }
 
         public async Task<IdentityResult> AddUserAsync(User user, string password)
@@ -53,6 +56,16 @@ namespace Sale_With_Maui.API.Helpers
         public async Task<bool> IsUserInRoleAsync(User user, string roleName)
         {
             return await _userManager.IsInRoleAsync(user, roleName);
+        }
+
+        public async Task<SignInResult> LoginAsync(LoginDTO model)
+        {
+            return await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
+        }
+
+        public async Task LogoutAsync()
+        {
+            await _signInManager.SignOutAsync();
         }
     }
 }

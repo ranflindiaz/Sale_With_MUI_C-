@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Sale_With_Maui.Shared.DTOs;
 using Sale_With_Maui.Shared.Entities;
 
 namespace Sale_With_Maui.API.Helpers
@@ -14,5 +15,10 @@ namespace Sale_With_Maui.API.Helpers
         Task AddUserToRoleAsync(User user, string roleName);
 
         Task<bool> IsUserInRoleAsync(User user, string roleName);
+
+        Task<SignInResult> LoginAsync(LoginDTO model);
+
+        Task LogoutAsync();
+
     }
 }
