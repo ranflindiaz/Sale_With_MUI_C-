@@ -21,6 +21,13 @@ namespace Sale_With_Maui.API.Controllers
             _context = context;
         }
 
+        [AllowAnonymous]
+        [HttpGet("combo")]
+        public async Task<ActionResult> GetComboAsync()
+        {
+            return Ok(await _context.Countries.ToListAsync());
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAsync([FromQuery] PaginationDto pagination)
         {
@@ -31,7 +38,6 @@ namespace Sale_With_Maui.API.Controllers
             {
                 queryable = queryable.Where(x => x.Name.ToLower().Contains(pagination.Filter.ToLower()));
             }
-
 
             return Ok(await queryable
                 .OrderBy(n => n.Name)
@@ -66,7 +72,6 @@ namespace Sale_With_Maui.API.Controllers
         [HttpPost]
         public async Task<IActionResult> PostAsync(Country country)
         {
-            
             try
             {
                 _context.Countries.Add(country);
@@ -86,7 +91,6 @@ namespace Sale_With_Maui.API.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            
         }
 
         [HttpGet("{id:int}")]
@@ -106,7 +110,6 @@ namespace Sale_With_Maui.API.Controllers
         [HttpPut]
         public async Task<IActionResult> PutAsync(Country country)
         {
-            
             try
             {
                 _context.Update(country);
