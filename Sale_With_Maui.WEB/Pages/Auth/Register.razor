@@ -91,27 +91,20 @@
                             </select>
                         </div>
                     </div>
-                        <div class="mb-3">
-                            <label>Ciudad:</label>
-                            <div>
-                                <select class="form-select" @bind="userDTO.CityId">
-                                    <option value="0">-- Seleccione una ciudad --</option>
-                                            @if (cities is not null)
-                                            {
-                                                @foreach (var city in cities)
-                                                {
-                                                    <option value="@city.Id">@city.Name</option>
-                                                }
-                                            }
-                                </select>
-                                <ValidationMessage For="@(() => userDTO.CityId)" />
-                            </div>
-                        </div>
                     <div class="mb-3">
-                        <label>Foto:</label>
+                        <label>Ciudad:</label>
                         <div>
-                            <InputText class="form-control" @bind-Value="@userDTO.Photo" />
-                            <ValidationMessage For="@(() => userDTO.Photo)" />
+                            <select class="form-select" @bind="userDTO.CityId">
+                                <option value="0">-- Seleccione una ciudad --</option>
+                                        @if (cities is not null)
+                                        {
+                                            @foreach (var city in cities)
+                                            {
+                                                <option value="@city.Id">@city.Name</option>
+                                            }
+                                        }
+                            </select>
+                            <ValidationMessage For="@(() => userDTO.CityId)" />
                         </div>
                     </div>
                     <div class="mb-3">
@@ -128,6 +121,9 @@
                             <ValidationMessage For="@(() => userDTO.PasswordConfirm)" />
                         </div>
                     </div>
+                    <div class="mb-3">
+                        <InputImg Label="Foto" ImageSelected="ImageSelected" ImageURL="@imageUrl" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -141,10 +137,17 @@
     private List<Country> countries;
     private List<State> states;
     private List<City> cities;
+    private string imageUrl;
 
     protected override async Task OnInitializedAsync()
     {
         await LoadCountriesAsync();
+    }
+
+    private void ImageSelected(string imagenBase64)
+    {
+        userDTO.Photo = imagenBase64;
+        imageUrl = null;
     }
 
     private async Task LoadCountriesAsync()
